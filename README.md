@@ -54,6 +54,7 @@ This repo is available as a package usable with **Arduino Boards Manager**.
 
 2. **Add this link** in the "**Additional Boards Managers URLs**" field:
 https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json
+![][link-stm-json-path]
 
 3. Replace existing Ethernet and FMC library with this W5300 library.
   path: C:\Users\_YOUR_NAME_\AppData\Local\Arduino15\libraries
@@ -137,3 +138,4 @@ Link
 [link-w5300-toe-C]: https://github.com/Wiznet/W5300-TOE-C
 [link-w5300-toe-micropython]: https://github.com/Wiznet/W5300-TOE-MicroPython
 [link-ethernet-path]: https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/iamges/arduino_ethernet_path.jpg
+[link-stm-json-path]: https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/iamges/getting_started/stm_arduino_json.png
