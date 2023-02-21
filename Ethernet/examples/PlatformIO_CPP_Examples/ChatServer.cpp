@@ -38,10 +38,10 @@ uint8_t alreadyConnected = false; // whether or not the client was connected pre
 void setup() {
   //For Serial output
   Serial3.setRx(PC11);
-  Serial3.setTx(PC10);  
+  Serial3.setTx(PC10);
   delay(50);
   Serial3.begin(9600);
-  
+
   // Open serial communications and wait for port to open:
   Serial3.begin(9600);
   while (!Serial3) {
@@ -65,8 +65,8 @@ void setup() {
   }
 
   // start listening for clients
-  server.begin(); 
-  
+  server.begin();
+
   Serial3.print("Chat server address:");
   Serial3.println(Ethernet.localIP());
 }
@@ -83,7 +83,7 @@ void loop() {
       // clear out the input buffer:
       client.flush();
       Serial3.printf("We have a new client\n");
-      //client.println("Hello, client!"); 
+      //client.println("Hello, client!");
       alreadyConnected = true;
     }
 
@@ -95,7 +95,7 @@ void loop() {
       //client.write(thisChar);
       server.write(thisChar);
       // echo the bytes to the server as well:
-      Serial3.write(thisChar); 
+      Serial3.write(thisChar);
     }
   }
 }

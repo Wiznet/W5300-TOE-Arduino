@@ -70,7 +70,7 @@ EthernetClient EthernetServer::available()
 				listening = true;
 
 			} else if (stat == SnSR::CLOSED) {
-  			    //Serial.printf("Debug: EthernetServer::available(), [status=CLOSED]\r\n");
+				//Serial.printf("Debug: EthernetServer::available(), [status=CLOSED]\r\n");
 				server_port[i] = 0;
 			}
 		}
@@ -91,7 +91,7 @@ EthernetClient EthernetServer::accept()
 	for (uint8_t i=0; i < maxindex; i++) {
 		if (server_port[i] == _port) {
 			uint8_t stat = Ethernet.socketStatus(i);
-            //Serial.printf("EthernetClient::accept()_loop \r\n");
+      //Serial.printf("EthernetClient::accept()_loop \r\n");
 			if (sockindex == MAX_SOCK_NUM &&
 			  (stat == SnSR::ESTABLISHED || stat == SnSR::CLOSE_WAIT)) {
 				// Return the connected client even if no data received.
@@ -113,8 +113,7 @@ EthernetClient EthernetServer::accept()
 
 EthernetServer::operator bool()
 {
-	Serial.printf("EthernetServer::bool() \r\n");
-
+	//Serial.printf("EthernetServer::bool() \r\n");
 	uint8_t maxindex=MAX_SOCK_NUM;
 #if MAX_SOCK_NUM > 4
 	if (W5300.getChipId() == 51) maxindex = 4; // W5100 chip never supports more than 4 sockets

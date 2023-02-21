@@ -94,7 +94,7 @@ public:
 
   static void setSS(uint8_t pin) {
     ss_pin = pin;
-    Serial.printf("setSS :-(%d)\n", ss_pin);
+    //Serial.printf("setSS :-(%d)\n", ss_pin);
   }
 //OLD codes End
 

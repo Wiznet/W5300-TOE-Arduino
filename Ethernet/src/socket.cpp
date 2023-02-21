@@ -138,7 +138,7 @@ uint8_t EthernetClass::socketBegin(uint8_t protocol, uint16_t port)
 	for (s=0; s < maxindex; s++) {
 		status[s] = W5300.getSnSR(s);
 		//W5300, Debug
-		Serial.printf("[Socket Status] Ethernet::socketBegin:readSnSR(%d) = 0x%02X\r\n", s, status[s]);
+		//Serial.printf("[Socket Status] Ethernet::socketBegin:readSnSR(%d) = 0x%02X\r\n", s, status[s]);
 		if (status[s] == SnSR::CLOSED) goto makesocket;  //W5300 Debug status[s] is 0x01 Wrong Values
 	}
 	for (s=0; s < maxindex; s++) {
@@ -150,7 +150,7 @@ uint8_t EthernetClass::socketBegin(uint8_t protocol, uint16_t port)
 	}
 //ARDUINO codes START to read socket END
 closemakesocket:
-	Serial.printf("W5300 socketBegin::socket close: 0x%02X\r\n", stat);
+	//Serial.printf("W5300 socketBegin::socket close: 0x%02X\r\n", stat);
 	W5300.execCmdSn(s, Sn_CR_CLOSE);  //ARDUINO: Sock_CLOSE
 
 makesocket:
@@ -193,7 +193,6 @@ uint8_t EthernetClass::socketBeginMulticast(uint8_t protocol, IPAddress ip, uint
 	// first check hardware compatibility
 	chip = W5300.getChipId();
 	if (!chip) return MAX_SOCK_NUM; // immediate error if no hardware detected
-
 	//Serial.printf("W5000socket begin, protocol=%d, port=%d\n", protocol, port);
 
 	// look at all the hardware sockets, use any that are closed (unused)
@@ -423,7 +422,7 @@ int EthernetClass::socketRecv(uint8_t sn, uint8_t *buf, int16_t len)
 		{
 			recvsize = getSockRX_RSR(sn);
 			tmp = W5300.getSnSR(sn); // == 0x22 SOCK_UDP
-			Serial.printf("Line: %d, socketRecv(%d): recvsize =%d, status = %d\n", __LINE__,  sn, recvsize, tmp);
+			//Serial.printf("Line: %d, socketRecv(%d): recvsize =%d, status = %d\n", __LINE__,  sn, recvsize, tmp);
 
 			if (tmp != SOCK_ESTABLISHED)
 			{
@@ -432,12 +431,12 @@ int EthernetClass::socketRecv(uint8_t sn, uint8_t *buf, int16_t len)
 					// FSR= Free space ready for transmit
 					else if(getSockTX_FSR(sn) == W5300.getSnTxMAX(sn)) {
 						socketClose(sn);
-						Serial.printf("socketRecv(): Free space is not ready for transmit(%d) \n", getSockTX_FSR(sn));
+						//Serial.printf("socketRecv(): Free space is not ready for transmit(%d) \n", getSockTX_FSR(sn));
 						return SOCKERR_SOCKSTATUS;
 					}
 				}
 				else {
-					Serial.print("invalid status  \n");
+					//Serial.print("invalid status  \n");
 					socketClose(sn);
 					return SOCKERR_SOCKSTATUS;
 				}
@@ -483,7 +482,6 @@ int EthernetClass::socketRecv(uint8_t sn, uint8_t *buf, int16_t len)
 	if(recvsize != 0)
 	{
 		read_data(sn, buf, recvsize);
-		Serial.printf("\n");
 		for(int i=0; i<recvsize; i++)
 		//W5300.exeCmd(sn, Sn_CR_RECV);
 			W5300.setSnCR(sn,Sn_CR_RECV);
@@ -506,11 +504,11 @@ int EthernetClass::socketRecv(uint8_t sn, uint8_t *buf, int16_t len)
 // /static int socketRecvTo(uint8_t sn, uint8_t *buf, int16_t len); //for UDP
 int EthernetClass::socketRecvUDP(uint8_t sn, uint8_t *buf, int16_t len) //socck
 {
-   	uint16_t mr;
-   	uint16_t mr1;
+  uint16_t mr;
+  uint16_t mr1;
 
-   	uint8_t  head[8];
-	uint16_t pack_len=0;
+  uint8_t  head[8];
+  uint16_t pack_len=0;
 
 	//mr1 = W5300.getMR();
 	//printf("recvfrom: getMR (%x)", mr1);
@@ -569,7 +567,7 @@ int EthernetClass::socketRecvUDP(uint8_t sn, uint8_t *buf, int16_t len) //socck
 	if(len < W5300.sock_remained_size[sn]) pack_len = len;
 	else pack_len = W5300.sock_remained_size[sn];
 	len = pack_len;
-	Serial3.printf("%d: recv len is %d \r\n ", __LINE__, len);
+	//Serial.printf("%d: recv len is %d \r\n ", __LINE__, len);
 #if 0
 	if(W5300.sock_pack_info[sn] & PACK_FIFOBYTE){
 		*buf++ = W5300.sock_remained_byte[sn];
@@ -583,7 +581,7 @@ int EthernetClass::socketRecvUDP(uint8_t sn, uint8_t *buf, int16_t len) //socck
 	if(len != 0)
 	{
 		read_data(sn, buf, pack_len); // data copy.
-		Serial3.printf("recv Data is [%s]", buf);
+		//Serial3.printf("recv Data is [%s]", buf);
 		W5300.setSn_CR(sn,Sn_CR_RECV);
 		/* wait to process the command... */
 		while(W5300.getSnCR(sn)) ;
@@ -592,7 +590,7 @@ int EthernetClass::socketRecvUDP(uint8_t sn, uint8_t *buf, int16_t len) //socck
 	W5300.sock_remained_size[sn] -= pack_len;
 	if(W5300.sock_remained_size[sn] != 0){
 		W5300.sock_pack_info[sn] |= PACK_REMAINED;
-		printf("sock_pack_info");
+		//printf("sock_pack_info");
 		if(pack_len & 0x01) W5300.sock_pack_info[sn] |= PACK_FIFOBYTE;
 	}
 	else W5300.sock_pack_info[sn] = PACK_COMPLETED;

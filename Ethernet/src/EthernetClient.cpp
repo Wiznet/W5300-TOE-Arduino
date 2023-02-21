@@ -134,7 +134,7 @@ void EthernetClient::flush()
 {
 	while (sockindex < MAX_SOCK_NUM) {
 		uint8_t stat = Ethernet.socketStatus(sockindex);
-		Serial.printf("EthernetClient::flush() socket status 0x%02X\r\n", stat);
+		//Serial.printf("EthernetClient::flush() socket status 0x%02X\r\n", stat);
 
 		//TODO: Debug, Blocking Code
 		//if (stat != SnSR::ESTABLISHED && stat != SnSR::CLOSE_WAIT) return;
@@ -143,7 +143,7 @@ void EthernetClient::flush()
 		//TODO: Temp code, debug prev code
 		//Use Case 1:
 		if (stat == SnSR::ESTABLISHED) {
-		Serial.printf("EthernetClient::flush() socket Established!!\r\n");
+		//Serial.printf("EthernetClient::flush() socket Established!!\r\n");
 			return ;
 		}
 	}
@@ -169,7 +169,7 @@ void EthernetClient::stop()
 	// if it hasn't closed, close it forcefully
 	Ethernet.socketClose(sockindex);
 
-  Serial.printf("EthernetClient::stop(%d) \r\n", sockindex);
+  //Serial.printf("EthernetClient::stop(%d) \r\n", sockindex);
 	sockindex = MAX_SOCK_NUM;
 }
 
