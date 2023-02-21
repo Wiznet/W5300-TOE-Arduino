@@ -108,11 +108,11 @@ Link
 [link-w5300_toe_shield]: fill_in_the_blank
 [link-nucleo-f429zi]: https://www.st.com/en/evaluation-tools/nucleo-f429zi.html
 
-[link-Linkstatus]: https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Ethernet/examples/Linkstatus
-[link-ChatServer]: https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Ethernet/examples/ChatServer
-[link-AdvancedChatServer]: https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Ethernet/Examples/AdvancedChatServer
-[link-WebServer]: https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Ethernet/examples/WebServer
-[link-BarometricPressureWebServer]: https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Ethernet/examples/BarometricPressureWebServer
-[link-PlatformIO_CPP_Examples]: https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Ethernet/examples/PlatformIO_CPP_Examples
+[link-Linkstatus]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/LinkStatus
+[link-ChatServer]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/ChatServer
+[link-AdvancedChatServer]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/AdvancedChatServer
+[link-WebServer]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/WebServer
+[link-BarometricPressureWebServer]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/BarometricPressureWebServer
+[link-PlatformIO_CPP_Examples]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/PlatformIO_CPP_Examples
 
 [link-stm_pinmap]:https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/static/images/stm_pimmap.png

@@ -62,16 +62,14 @@ Download: https://www.hw-group.com/software/hercules-setup-utility
 
 - ChatServer
 ![][link-Chatserver]
+
+
 If you send text stream to  Server, you can receive the loopback  stream.
 
 - AdvancedChatServer
 ![][link-advancedChatServer_1]
 ![][link-advancedChatServer_2]
 If Multi-client connect to Server, each client can chat each other.
-
-- Serial Logs
-![][link-advancedChatServer_serialLogs]
-You can also see the serial log data.
 
 - WebServer
 ![][link-webServer]
