@@ -46,7 +46,7 @@ And W5300 TOE Examples supports two IDEs.
   </tr>
 </table>
 
-
+<br></br>
 - **ARDUINO for STM32 Project**
 
 1. Reference: https://github.com/stm32duino/Arduino_Core_STM32/blob/main/README.md
@@ -55,16 +55,19 @@ This repo is available as a package usable with **Arduino Boards Manager**.
 2. **Add this link** in the "**Additional Boards Managers URLs**" field:
 https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json
 
-3. Replace existing W5100 library with this W5300 library.
+3. Replace existing Ethernet and FMC library with this W5300 library.
+  path: C:\Users\_YOUR_NAME_\AppData\Local\Arduino15\libraries
+  
+  ![][link-ethernet-path]
 
-
+<br></br>
 - **PlatformIO for STM32 Project**
 
-1. Make PlatformIO Project for  STM32F4 Series.
+1. Make PlatformIO Project for  STM32F4 Series (for example: select **NUCLEO-F429ZI** board).
 
 2. Follow the README in the PlatformIO's directory and folder.
 
-3. This library have to located in lib  path.
+3. This library have to locate in lib  path.
 
 <a name="directory_structure"></a>
 ## Directory Structure
@@ -133,3 +136,4 @@ Link
 [link-datasheet_w5300_toe_shield]: fill_in_the_blank
 [link-w5300-toe-C]: https://github.com/Wiznet/W5300-TOE-C
 [link-w5300-toe-micropython]: https://github.com/Wiznet/W5300-TOE-MicroPython
+[link-ethernet-path]: https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/iamges/arduino_ethernet_path.jpg
