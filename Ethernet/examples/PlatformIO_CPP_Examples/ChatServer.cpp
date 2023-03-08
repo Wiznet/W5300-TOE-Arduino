@@ -43,7 +43,6 @@ void setup() {
   Serial3.begin(9600);
 
   // Open serial communications and wait for port to open:
-  Serial3.begin(9600);
   while (!Serial3) {
    ; // wait for serial port to connect. Needed for native USB port only
   }

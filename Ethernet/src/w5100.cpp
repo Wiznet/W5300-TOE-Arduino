@@ -186,11 +186,13 @@ uint32_t W5300Class::getSnTX_FSR(uint8_t sn)
 void W5300Class::execCmdSn(uint8_t s, uint8_t cmd)
 {
 	// Send command to socket
-	setSn_CR(s, cmd); //TODO: W5300 debug
+
+	W5300.setSnCR(s, cmd); //TODO: W5300 debug
 	// Wait for command to complete
 	delay(10); //W5300 Debug
 	//Serial.printf("W5300 execCmdSn socket CMD(Sock Open:0x01, Listen:0x02)  =0x%02X\n", cmd);
-	while (getSn_CR(s)) ;
+
+	while (W5300.getSnCR(s)) ;
 	//while (uint8_t temp = getSn_CR(s))
 	//{
 	//	Serial.printf("W5300 execCmdSn socket CMD( Close ), CMD = 0x%02X\n", temp);

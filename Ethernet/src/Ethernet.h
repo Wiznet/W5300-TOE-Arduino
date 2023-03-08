@@ -204,7 +204,6 @@ private:
 	static uint16_t socketSendAvailable(uint8_t s);
 	// Receive data (TCP)
 	static int socketRecv(uint8_t s, uint8_t * buf, int16_t len);
-	static int socketRecvFrom(uint8_t sn, uint8_t *buf, int16_t len); //for UDP
 	static int socketRecvUDP(uint8_t sn, uint8_t *buf, int16_t len); //for UDP
 	//static uint16_t socketRecvAvailable(uint8_t s);
 	static uint32_t socketRecvAvailable(uint8_t s);  //W5300

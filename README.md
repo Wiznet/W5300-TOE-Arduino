@@ -118,9 +118,9 @@ Please refer to [**Getting Started**][link-getting_started] for how to configure
 <a name="other_examples"></a>
 ### Other Examples
 
-- Arduino
+- W5300 TOE C
     - [**W5300-TOE-C**][link-w5300-toe-C]
-- MicroPython
+- W5300 TOE MicroPython
     - [**W5300-TOE-MicroPython**][link-w5300-toe-micropython]
 
 

@@ -75,7 +75,6 @@ int EthernetUDP::beginPacket(const char *host, uint16_t port)
 int EthernetUDP::beginPacket(IPAddress ip, uint16_t port)
 {
 	_offset = 0;
-	//Serial.printf("UDP beginPacket\n");
 	return Ethernet.socketStartUDP(sockindex, rawIPAddress(ip), port);
 }
 
@@ -112,7 +111,7 @@ int EthernetUDP::parsePacket()
 		uint8_t tmpBuf[8];
 		int ret=0;
 		//read 8 header bytes and get IP and port from it
-		ret = Ethernet.socketRecvUDP(sockindex, tmpBuf, 8); //socketRecvUdp()
+		ret = Ethernet.socketRecvUDP(sockindex, tmpBuf, 8); //Get IP, Port, and Remaining size
 		if (ret > 0) {
 			_remoteIP = tmpBuf;
 			_remotePort = tmpBuf[4];

@@ -295,7 +295,7 @@ void EthernetClass::socketClose(uint8_t s)
 	W5300.sock_is_sending &= ~(1<<s);
 	W5300.sock_remained_size[s] = 0;
 	W5300.sock_pack_info[s] = 0;
-	while(W5300.getSnSR(s) != SOCK_CLOSED);
+	//while(W5300.getSnSR(s) != SOCK_CLOSED);  //TODO: W5300, check Sn_SR
 }
 
 
@@ -413,9 +413,7 @@ int EthernetClass::socketRecv(uint8_t sn, uint8_t *buf, int16_t len)
 
 	recvsize = W5300.getSnRxMAX(sn);
 	if(recvsize < len) len = recvsize;
-	//Serial.printf("socketRecv() len = %d, \n", len);
 
-	//Serial.printf("socketRecv() SnRxMAX recvsize =%d, \n", recvsize);
 	if(W5300.sock_remained_size[sn] == 0)
 	{
 		while(1)
@@ -482,7 +480,6 @@ int EthernetClass::socketRecv(uint8_t sn, uint8_t *buf, int16_t len)
 	if(recvsize != 0)
 	{
 		read_data(sn, buf, recvsize);
-		for(int i=0; i<recvsize; i++)
 		//W5300.exeCmd(sn, Sn_CR_RECV);
 			W5300.setSnCR(sn,Sn_CR_RECV);
 			while(W5300.getSnCR(sn));
@@ -501,21 +498,19 @@ int EthernetClass::socketRecv(uint8_t sn, uint8_t *buf, int16_t len)
 	return len;
 }
 
-// /static int socketRecvTo(uint8_t sn, uint8_t *buf, int16_t len); //for UDP
+
+//Recieve UDP Packet
 int EthernetClass::socketRecvUDP(uint8_t sn, uint8_t *buf, int16_t len) //socck
 {
-  uint16_t mr;
-  uint16_t mr1;
+	uint16_t mr;
+	uint16_t mr1;
 
-  uint8_t  head[8];
-  uint16_t pack_len=0;
+	uint8_t  head[8];
+	uint16_t pack_len=0;
 
-	//mr1 = W5300.getMR();
-	//printf("recvfrom: getMR (%x)", mr1);
-	// check invalid MR
-	//if (((mr=W5300.getSn_MR(sn)) & 0x0F) != Sn_MR_UDP) return SOCKERR_SOCKMODE;
+	mr1 = W5300.getMR();
+	mr = W5300.getSnMR(sn);
 
-// #1
 	if(W5300.sock_remained_size[sn] == 0){
 		while(1){
 			//pack_len = getSn_RX_RSR(sn); // org
@@ -526,48 +521,58 @@ int EthernetClass::socketRecvUDP(uint8_t sn, uint8_t *buf, int16_t len) //socck
 			if(pack_len != 0) break;
 		}
 	}
-	//#2
-	if(W5300.sock_remained_size[sn] == 0) {
-		printf("Sn_MR_UDP");
-   		read_data(sn, head, 8);
-   		//W5300.setSn_CR(sn,Sn_CR_RECV);
-   		//while(W5300.getSnCR(sn));
 
-	//#2+ udp only
-#if 1
-	   if(mr1 & MR_FS)
-   		{
-   			printf(" >> mr1 MR_FS");
-			// addr[0] = head[1];
-			// addr[1] = head[0];
-			// addr[2] = head[3];
-			// addr[3] = head[2];
+    //parse ip address  and port number.
+	if(W5300.sock_remained_size[sn] == 0)
+	{
+		//Serial.printf("sock_remained_size[%d], Read Head(ip, port, remained\n", sn);
+		//read_data(sn, head, 8);  //Origin
+		read_data(sn, buf, 8);
+		//W5300.setSnCR(sn,Sn_CR_RECV);
+		//while(W5300.getSnCR(sn));
+		// read peer's IP address, port number & packet length
+
+		if(mr1 & MR_FS)  /**< FIFO swap bit of \ref MR. Swap MSB & LSB of \ref Sn_TX_FIFOR & Sn_RX_FIFOR (0 : No swap, 1 : Swap) */
+		{
+			//buf[0] = head[1];
+			//buf[1] = head[0];
+			//buf[2] = head[3];
+			//buf[3] = head[2];
+			//buf[4] = head[5];
+			//buf[4] = (*port << 8) + head[4];
 			//*port = head[5];
 			//*port = (*port << 8) + head[4];
-			W5300.sock_remained_size[sn] = head[7];
-			W5300.sock_remained_size[sn] = (W5300.sock_remained_size[sn] << 8) + head[6];
+			//W5300.sock_remained_size[sn] = head[7];  //Origin
+			W5300.sock_remained_size[sn] = buf[7];
+			//W5300.sock_remained_size[sn] = (W5300.sock_remained_size[sn] << 8) + head[6];  //Origin
+			W5300.sock_remained_size[sn] = (W5300.sock_remained_size[sn] << 8) + buf[6];
 		}
 		else
 		{
-			printf(" >> mr1 else");
-			//addr[0] = head[0];
-			//addr[1] = head[1];
-			//addr[2] = head[2];
-			//addr[3] = head[3];
+			//ARDUINO Examples Format
+			//buf[0] = head[0];
+			//buf[1] = head[1];
+			//buf[2] = head[2];
+			//buf[3] = head[3];
 			//*port = head[4];
 			//*port = (*port << 8) + head[5];
-			W5300.sock_remained_size[sn] = head[6];
-			W5300.sock_remained_size[sn] = (W5300.sock_remained_size[sn] << 8) + head[7];
+			//buf[4] = head[4];
+			//buf[4] = (*port << 8) + head[5];
+			//W5300.sock_remained_size[sn] = head[6];  //Origin
+			W5300.sock_remained_size[sn] = buf[6];
+			//W5300.sock_remained_size[sn] = (W5300.sock_remained_size[sn] << 8) + head[7];
+			W5300.sock_remained_size[sn] = (W5300.sock_remained_size[sn] << 8) + buf[7];
 		}
-#endif
-   		W5300.sock_pack_info[sn] = PACK_FIRST;
-   	}
-//HEADER_END
-   	//#3
+		W5300.sock_pack_info[sn] = PACK_FIRST;
+
+		return W5300.sock_remained_size[sn];
+	}
+	//HEADER_END
+
 	if(len < W5300.sock_remained_size[sn]) pack_len = len;
 	else pack_len = W5300.sock_remained_size[sn];
 	len = pack_len;
-	//Serial.printf("%d: recv len is %d \r\n ", __LINE__, len);
+	//Serial.printf("%d: socketRecvUDP(), recv len is %d \r\n ", __LINE__, len);
 #if 0
 	if(W5300.sock_pack_info[sn] & PACK_FIFOBYTE){
 		*buf++ = W5300.sock_remained_byte[sn];
@@ -577,18 +582,19 @@ int EthernetClass::socketRecvUDP(uint8_t sn, uint8_t *buf, int16_t len) //socck
 	}
 #endif
 
-//READ
+    //READ
 	if(len != 0)
 	{
 		read_data(sn, buf, pack_len); // data copy.
 		//Serial3.printf("recv Data is [%s]", buf);
-		W5300.setSn_CR(sn,Sn_CR_RECV);
+		W5300.setSnCR(sn,Sn_CR_RECV);
 		/* wait to process the command... */
 		while(W5300.getSnCR(sn)) ;
 	}
 
 	W5300.sock_remained_size[sn] -= pack_len;
-	if(W5300.sock_remained_size[sn] != 0){
+	if(W5300.sock_remained_size[sn] != 0)
+	{
 		W5300.sock_pack_info[sn] |= PACK_REMAINED;
 		//printf("sock_pack_info");
 		if(pack_len & 0x01) W5300.sock_pack_info[sn] |= PACK_FIFOBYTE;
@@ -713,15 +719,6 @@ uint16_t EthernetClass::socketSend(uint8_t sn, const uint8_t * buf, uint16_t len
   return (int32_t)len;
 }
 
-//TODO: Optimize,  import ioLibrary
-/**
- * @brief	This function used to send the data in TCP mode
- * @return	1 for success else 0.
- */
-//uint16_t EthernetClass::socketSendTo(uint8_t sn, const uint8_t * buf, uint16_t len)
-//{
-//
-//}
 
 
 uint16_t EthernetClass::socketSendAvailable(uint8_t s)
@@ -739,9 +736,9 @@ uint16_t EthernetClass::socketSendAvailable(uint8_t s)
 //W5300, Called by UDP
 uint16_t EthernetClass::socketBufferData(uint8_t s, uint16_t offset, const uint8_t* buf, uint16_t len)
 {
-	//Serial.printf("  bufferData, offset=%d, len=%d\n", offset, len);
+
 	uint16_t ret =0;
-	uint16_t txfree = getSockTX_FSR(s);
+	uint32_t txfree = W5300.getSnTX_FSR(s);
 	if (len > txfree) {
 		ret = txfree; // check size not to exceed MAX size.
 	} else {
@@ -762,8 +759,12 @@ bool EthernetClass::socketStartUDP(uint8_t s, uint8_t* addr, uint16_t port)
 	return true;
 }
 
+//Send UDP packet
+//
 bool EthernetClass::socketSendUDP(uint8_t s)
 {
+	//W5300 only START
+	W5300.setSnTX_WRSR(s, W5300.udp_send_packet_len);  //Opt udp_send_packet_len for Class type
 	W5300.execCmdSn(s, Sock_SEND);
 
 	/* +2008.01 bj */
@@ -780,7 +781,7 @@ bool EthernetClass::socketSendUDP(uint8_t s)
 	/* +2008.01 bj */
 	W5300.setSnIR(s, SnIR::SEND_OK);
 
-	//Serial.printf("sendUDP ok\n");
+	//Serial.printf("socketSendUDP() --> OK\n");
 	/* Sent ok */
 	return true;
 }

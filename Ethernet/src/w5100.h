@@ -17,7 +17,6 @@
 #include <Arduino.h>
 #include "w5300_define.h"
 // Safe for all chips
-//#define SPI_ETHERNET_SETTINGS SPISettings(14000000, MSBFIRST, SPI_MODE0)
 
 // Safe for W5200 and W5500, but too fast for W5100
 // Uncomment this if you know you'll never need W5100 support.
@@ -36,6 +35,7 @@ public:
   static uint16_t sock_any_port;
   static uint16_t sock_io_mode;
   static uint16_t sock_is_sending;
+  uint16_t udp_send_packet_len = 0;  //W5300
   uint8_t sock_remained_byte[_WIZCHIP_SOCK_NUM_]; // set by wiz_recv_data()
   uint16_t sock_remained_size[_WIZCHIP_SOCK_NUM_];
   uint8_t  sock_pack_info[_WIZCHIP_SOCK_NUM_];
@@ -98,9 +98,8 @@ public:
   }
 //OLD codes End
 
-//W5300 API, W5300.xxxx()
-#define set_MR(mr)         WIZCHIP_WRITE(MR,mr)//(*((uint16_t*)MR) = (uint16_t)((mr) & 0xFFFF))
-#define get_MR()           WIZCHIP_READ(MR)// (*((uint16_t*)MR))
+#define set_MR(mr)         WIZCHIP_WRITE(MR,mr)
+#define get_MR()           WIZCHIP_READ(MR)
 #define get_IDR()          WIZCHIP_READ(IDR)
 
 /***********************************
@@ -254,7 +253,7 @@ public:
   static uint32_t getSnRxMAX(uint8_t sn)                  {return getSn_RxMAX(sn) ;}
 
   //Temp
-    uint16_t getSnRX_RD(uint8_t sn)              {return getSn_RX_RD(sn) ;}
+  uint16_t getSnRX_RD(uint8_t sn)              {return getSn_RX_RD(sn) ;}
 
 };//w5300 class
 
