@@ -1,11 +1,12 @@
 # W5300 TOE Examples
 
-- [**Overview**](#overview)
-- [**Directory Structure**](#directory_structure)
-- [**Getting Started**](#getting_started)
-- [**Appendix**](#appendix)
-    - [**Datasheet**](#datasheet)
-    - [**Other Examples**](#other_examples)
+- [W5300 TOE Examples](#w5300-toe-examples)
+  - [Overview](#overview)
+  - [Directory Structure](#directory-structure)
+  - [Getting Started](#getting-started)
+  - [Appendix](#appendix)
+    - [Datasheet](#datasheet)
+    - [Other Examples](#other-examples)
 
 
 
@@ -80,6 +81,7 @@ W5300-TOE-ARDUINO
   ┃   ┣ example
   ┃   ┃   ┣ LinkStatus
   ┃   ┃   ┣ ChatServer
+  ┃   ┃   ┣ DhcpAddressPrinter
   ┃   ┃   ┣ AdvancedChatServer
   ┃   ┃   ┣ WebServer
   ┃   ┃   ┣ BarometricPressureWebServer
