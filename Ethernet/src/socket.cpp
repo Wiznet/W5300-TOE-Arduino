@@ -284,7 +284,7 @@ void EthernetClass::socketClose(uint8_t s)
       //sendto(s,destip,1,destip,0x3000); // send the dummy data to an unknown destination(0.0.0.1).
    }
 
-	W5300.execCmdSn(s, SOCK_CLOSED);
+	W5300.execCmdSn(s, Sn_CR_CLOSE);
 	//Serial.printf("EthernetClass::socketClose(%d) \r\n", s);
 
 	/* clear all interrupt of the socket. */
@@ -295,7 +295,7 @@ void EthernetClass::socketClose(uint8_t s)
 	W5300.sock_is_sending &= ~(1<<s);
 	W5300.sock_remained_size[s] = 0;
 	W5300.sock_pack_info[s] = 0;
-	//while(W5300.getSnSR(s) != SOCK_CLOSED);  //TODO: W5300, check Sn_SR
+	while(W5300.getSnSR(s) != SOCK_CLOSED);
 }
 
 
