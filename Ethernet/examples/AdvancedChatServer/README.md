@@ -62,19 +62,19 @@ and And set the maximum number of connected clients.
 ## Step 5: Run
 
 1. Connect to the serial COM port of STM32 Nucleo-144 board with Tera Term.
-<p align="center"><img src=" https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/teraterm_setting.png"></p>
+<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/teraterm_setting.png"></p>
 
 2. If the AdvancedChatServer example works normally on STM32 Nucleo-144 board, you can see the network information of STM32 Nucleo-144 board and the chat server is open.
-<p align="center"><img src=" https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/chat_server_setting_up.png"></p>
+<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/chat_server_setting_up.png"></p>
 
 3. Connect to the open chat server using Hercules TCP client. When connecting to the chat server, you need to enter is the IP that was configured in Step 3, the port is 5000 by default.
-<p align="center"><img src=" https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/chat_server_connect.png"></p>
+<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/chat_server_connect.png"></p>
 
 4. When a new client connects, the program sends a welcome message and stores the client's connection in an array.
 
 5. When a client sends a message, the program broadcasts the message to all connected clients, except the one that sent the message.
-<p align="center"><img src=" https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/advancedChatServer_1"></p>
-<p align="center"><img src=" https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/advancedChatServer_2"></p>
+<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/advancedChatServer_1"></p>
+<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/advancedChatServer_2"></p>
 
 
 

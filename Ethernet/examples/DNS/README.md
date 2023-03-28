@@ -47,9 +47,9 @@ char dns_domain[] = "www.wiznet.io";
 ## Step 5: Run
 
 1. Connect to the serial COM port of STM32 Nucleo-144 board with Tera Term.
-<p align="center"><img src=" https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/teraterm_setting.png"></p>
+<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/teraterm_setting.png"></p>
 2. If the DNS example works normally on STM32 Nucleo-144 board, you can see the DNS information of domain.
-<p align="center"><img src=" https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/dns_setting_up.png"></p>
+<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/dns_setting_up.png"></p>
 
 <!--
 Link
