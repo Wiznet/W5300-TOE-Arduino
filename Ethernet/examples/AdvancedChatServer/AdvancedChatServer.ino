@@ -1,131 +1,90 @@
-/*
- Advanced Chat Server
-
- A more advanced server that distributes any incoming messages
- to all connected clients but the client the message comes from.
- To use, telnet to your device's IP address and type.
- You can see the client's input in the serial monitor as well.
- Using an Arduino Wiznet Ethernet shield.
-
- Circuit:
- * Ethernet shield attached to pins 10, 11, 12, 13
-
- created 18 Dec 2009
- by David A. Mellis
- modified 9 Apr 2012
- by Tom Igoe
- redesigned to make use of operator== 25 Nov 2013
- by Norbert Truchsess
-
- */
-
 #include <Arduino.h>
 #include "Ethernet.h"
 #include "HardwareSerial.h"
 
-// Enter a MAC address and IP address for your controller below.
-// The IP address will be dependent on your local network.
-// gateway and subnet are optional:
-byte mac[] = {
-  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
-};
-IPAddress ip(192, 168, 1, 177);
-IPAddress myDns(192, 168, 1, 1);
-IPAddress gateway(192, 168, 1, 1);
-IPAddress subnet(255, 255, 0, 0);
+/* Network Info */
+#define SERVER_PORT 5000
+#define MAX_CLIENT  8
 
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
+IPAddress ip(192, 168, 11, 104);
+IPAddress myDns(8, 8, 8, 8);
+IPAddress gateway(192, 168, 11, 1);
+IPAddress subnet(255, 255, 255, 0);
 
-// telnet defaults to port 23
-EthernetServer server(23);
+EthernetServer server(SERVER_PORT);
+EthernetClient clients[MAX_CLIENT];
 
-EthernetClient clients[8];
+void print_network_info(void);
 
 void setup() {
-  //For Serial output
+  //STM32F429ZI's Serial port changed from default Serial Port
   Serial3.setRx(PC11);
-  Serial3.setTx(PC10);  
-  delay(50);
+  Serial3.setTx(PC10); 
   Serial3.begin(9600);
-  
-  // You can use Ethernet.init(pin) to configure the CS pin
-  //Ethernet.init(10);  // Most Arduino shields
-  //Ethernet.init(5);   // MKR ETH shield
-  //Ethernet.init(0);   // Teensy 2.0
-  //Ethernet.init(20);  // Teensy++ 2.0
-  //Ethernet.init(15);  // ESP8266 with Adafruit Featherwing Ethernet
-  //Ethernet.init(33);  // ESP32 with Adafruit Featherwing Ethernet
 
-  // initialize the Ethernet device
   Ethernet.begin(mac, ip, myDns, gateway, subnet);
 
-  // Open serial communications and wait for port to open:
-  Serial3.begin(9600);
-  while (!Serial3) {
-   ; // wait for serial port to connect. Needed for native USB port only
-  }
-  Serial3.println("Ethernet AdvancedChatServer Example");
-
-  // Check for Ethernet hardware present
-  if (Ethernet.hardwareStatus() == EthernetNoHardware) {
-    Serial3.println("Ethernet shield was not found.  Sorry, can't run without hardware. :(");
-    while (true) {
-      delay(1); // do nothing, no point running without Ethernet hardware
-    }
-  }
-  if (Ethernet.linkStatus() == LinkOFF) {
-    Serial.println("Ethernet cable is not connected.");
-  }
-
-  // start listening for clients
-  server.begin();
-
-  Serial.print("Chat server address:");
-  Serial.println(Ethernet.localIP());
+   print_network_info();
+   server.begin();
 }
 
 void loop() {
-  // check for any new client connecting, and say hello (before any incoming data)
   EthernetClient newClient = server.accept();
-  if (newClient) {
-    for (byte i=0; i < 8; i++) {
+
+  if (newClient) {  	
+    for (byte i=0; i < MAX_CLIENT; i++) {
       if (!clients[i]) {
-        Serial.print("We have a new client #");
-        Serial.println(i);
-        newClient.print("Hello, client number: ");
-        newClient.println(i);
-        // Once we "accept", the client is no longer tracked by EthernetServer
-        // so we must store it into our list of clients
+        Serial.printf("We have a new client # %d \r\n", i);
+        newClient.printf("Hello, client number: %d\r\n", i);
+
         clients[i] = newClient;
         break;
       }
     }
   }
 
-  // check for incoming data from all clients
-  for (byte i=0; i < 8; i++) {
+  for (byte i=0; i < MAX_CLIENT; i++) {
     if (clients[i] && clients[i].available() > 0) {
-      // read bytes from a client
       byte buffer[80];
       int count = clients[i].read(buffer, 80);
-      //Serial3.printf("read count : %d\n", count);
-      // write the bytes to all other connected clients
-      for (byte j=0; j < 8; j++) {
-        if (j != i && clients[j].connected()) {s
-          //Serial3.printf("connected clients : %d\n", j);
-          //for (uint8_t h = 0; h < count; h++)
-          //  Serial3.printf("buff write : %c\n", buffer[h]);
+
+      for (byte j=0; j < MAX_CLIENT; j++) {
+        if (j != i && clients[j].connected()) {
           clients[j].write(buffer, count);
         }
       }
     }
   }
 
-  // stop any clients which disconnect
-  for (byte i=0; i < 8; i++) {
+  for (byte i=0; i < MAX_CLIENT; i++) {
     if (clients[i] && !clients[i].connected()) {
-      Serial.print("disconnect client #");
-      Serial.println(i);
+      Serial.printf("disconnect client #%d \r\n", i);
+
       clients[i].stop();
     }
   }
+}
+
+
+void print_network_info(void){
+  byte print_mac[] ={0,};
+  Serial.println("\r\n-------------------------------------------------");
+  Serial.printf("MAC        : ");
+  Ethernet.MACAddress(print_mac);
+  for (byte i = 0; i < 6; i++) {
+    Serial.print(print_mac[i], HEX);
+    if (i < 5) {
+      Serial.print(":");
+    }
+  }
+  Serial.println();
+  Serial.printf("IP         : ");
+  Serial.println(Ethernet.localIP());
+  Serial.printf("Gateway IP : ");
+  Serial.println(Ethernet.subnetMask());
+  Serial.printf("DNS        : ");
+  Serial.println(Ethernet.dnsServerIP());
+  Serial.println("-------------------------------------------------");
+  Serial.printf("Advanced Chat Server(port:%d) start ... \r\n", SERVER_PORT);
 }

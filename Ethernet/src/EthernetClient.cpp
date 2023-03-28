@@ -32,7 +32,6 @@ int EthernetClient::connect(const char * host, uint16_t port)
 	if (sockindex < MAX_SOCK_NUM) {
 		if (Ethernet.socketStatus(sockindex) != SnSR::CLOSED) {
 			Ethernet.socketDisconnect(sockindex); // TODO: should we call stop()?
-			//Serial.printf("EthernetClient::connect() --> Ethernet.socketDisconnect()\r\n");
 		}
 		sockindex = MAX_SOCK_NUM;
 	}

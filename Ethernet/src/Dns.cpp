@@ -35,7 +35,7 @@
 #define CLASS_IN                 (0x0001)
 #define LABEL_COMPRESSION_MASK   (0xC0)
 // Port number that DNS servers listen on
-#define DNS_PORT        53
+#define DNS_PORT        53  //google DNS port
 
 // Possible return codes from ProcessResponse
 #define SUCCESS          1
@@ -43,6 +43,22 @@
 #define INVALID_SERVER   -2
 #define TRUNCATED        -3
 #define INVALID_RESPONSE -4
+
+#define ETHERNET_BUF_MAX_SIZE (1024 * 2)
+#define MAX_DOMAIN_NAME   128       // for example "www.google.com"
+#define	MAXCNAME	   (MAX_DOMAIN_NAME + (MAX_DOMAIN_NAME>>1))	   /* Maximum amount of cname recursion */
+
+#define	MAX_DNS_BUF_SIZE	256
+#define DNS_MSG_ID         0x1122   ///< ID for DNS message. You can be modifyed it any number
+#define SOCKET_DNS 0
+
+uint8_t* pDNSMSG;       // DNS message buffer
+uint8_t  DNS_SOCKET;    // SOCKET number for DNS
+uint16_t DNS_MSGID;     // DNS message ID
+
+static uint8_t g_dns_buf[ETHERNET_BUF_MAX_SIZE] = {
+    0,
+};
 
 void DNSClient::begin(const IPAddress& aDNSServer)
 {
@@ -106,12 +122,12 @@ int DNSClient::getHostByName(const char* aHostname, IPAddress& aResult, uint16_t
 		int retries = 0;
 		// while ((retries < 3) && (ret <= 0)) {
 		// Send DNS request
-		ret = iUdp.beginPacket(iDNSServer, DNS_PORT);
+		ret = iUdp.beginPacket(iDNSServer, DNS_PORT); 
 		if (ret != 0) {
 			// Now output the request data
-			ret = BuildRequest(aHostname);
+				ret = BuildRequest(aHostname);
 			if (ret != 0) {
-				// And finally send the request
+					// And finally send the request
 				ret = iUdp.endPacket();
 				if (ret != 0) {
 					// Now wait for a response
@@ -134,9 +150,96 @@ int DNSClient::getHostByName(const char* aHostname, IPAddress& aResult, uint16_t
 	return ret;
 }
 
+
+/* copies uint16_t to the network buffer with network byte order. */
+uint8_t * put16(uint8_t * s, uint16_t i)
+{
+	*s++ = i >> 8;
+	*s++ = i;
+	return s;
+}
+
+/* DNS CLIENT INIT */
+void DNS_init(uint8_t s, uint8_t * buf)
+{
+	DNS_SOCKET = s; // SOCK_DNS
+	pDNSMSG = buf; // User's shared buffer
+	DNS_MSGID = DNS_MSG_ID;
+}
+
+
+int16_t dns_makequery(uint16_t op, char * name, uint8_t * buf, uint16_t len)
+{
+	uint8_t *cp;
+	char *cp1;
+	char sname[MAXCNAME];
+	char *dname;
+	uint16_t p;
+	uint16_t dlen;
+
+	cp = buf;
+
+	DNS_MSGID++;
+	cp = put16(cp, DNS_MSGID);
+
+	p = (op << 11) | 0x0100;			/* Recursion desired */
+	cp = put16(cp, p);
+
+	cp = put16(cp, 1);
+	cp = put16(cp, 0);
+	cp = put16(cp, 0);
+	cp = put16(cp, 0);
+
+//COMPARE A
+	strcpy(sname, name);
+	dname = sname;
+	dlen = strlen(dname);
+	for (;;)
+	{
+		/* Look for next dot */
+		cp1 = strchr(dname, '.');
+
+		if (cp1 != NULL) len = cp1 - dname;	/* More to come */
+		else len = dlen;			/* Last component */
+
+		*cp++ = len;				/* Write length of component */
+		if (len == 0) break;
+
+		/* Copy component up to (but not including) dot */
+		strncpy((char *)cp, dname, len);
+		cp += len;
+		if (cp1 == NULL)
+		{
+			*cp++ = 0;			/* Last one; write null and finish */
+			break;
+		}
+		dname += len+1;
+		dlen -= len+1;
+	}
+
+	cp = put16(cp, 0x0001);				/* type: TYPE_A*/
+	cp = put16(cp, 0x0001);				/* class: CLASS_IN */
+
+	return ((int16_t)((uint32_t)(cp) - (uint32_t)(buf)));
+}
+
+
+//Austin :)
 uint16_t DNSClient::BuildRequest(const char* aName)
 {
-	// Build header
+   //dnsMakeQuery
+	uint16_t length;
+	uint8_t *buf;
+	//pDNSMSG = buf;
+	DNS_init(SOCKET_DNS, g_dns_buf);
+	length = dns_makequery(0, (char *)aName, pDNSMSG, MAX_DNS_BUF_SIZE);
+	iUdp.write((uint8_t*)pDNSMSG, length);
+
+	//Austin 
+	//W5300.udp_send_packet_len = length;
+
+
+	// Build header1
 	//                                    1  1  1  1  1  1
 	//      0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
 	//    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
@@ -154,58 +257,7 @@ uint16_t DNSClient::BuildRequest(const char* aName)
 	//    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 	// As we only support one request at a time at present, we can simplify
 	// some of this header
-	iRequestId = millis(); // generate a random ID
-	uint16_t twoByteBuffer;
 
-	// FIXME We should also check that there's enough space available to write to, rather
-	// FIXME than assume there's enough space (as the code does at present)
-	iUdp.write((uint8_t*)&iRequestId, sizeof(iRequestId));
-
-	twoByteBuffer = htons(QUERY_FLAG | OPCODE_STANDARD_QUERY | RECURSION_DESIRED_FLAG);
-	iUdp.write((uint8_t*)&twoByteBuffer, sizeof(twoByteBuffer));
-
-	twoByteBuffer = htons(1);  // One question record
-	iUdp.write((uint8_t*)&twoByteBuffer, sizeof(twoByteBuffer));
-
-	twoByteBuffer = 0;  // Zero answer records
-	iUdp.write((uint8_t*)&twoByteBuffer, sizeof(twoByteBuffer));
-
-	iUdp.write((uint8_t*)&twoByteBuffer, sizeof(twoByteBuffer));
-	// and zero additional records
-	iUdp.write((uint8_t*)&twoByteBuffer, sizeof(twoByteBuffer));
-
-	// Build question
-	const char* start =aName;
-	const char* end =start;
-	uint8_t len;
-	// Run through the name being requested
-	while (*end) {
-		// Find out how long this section of the name is
-		end = start;
-		while (*end && (*end != '.') ) {
-			end++;
-		}
-
-		if (end-start > 0) {
-			// Write out the size of this section
-			len = end-start;
-			iUdp.write(&len, sizeof(len));
-			// And then write out the section
-			iUdp.write((uint8_t*)start, end-start);
-		}
-		start = end+1;
-	}
-
-	// We've got to the end of the question name, so
-	// terminate it with a zero-length section
-	len = 0;
-	iUdp.write(&len, sizeof(len));
-	// Finally the type and class of question
-	twoByteBuffer = htons(TYPE_A);
-	iUdp.write((uint8_t*)&twoByteBuffer, sizeof(twoByteBuffer));
-
-	twoByteBuffer = htons(CLASS_IN);  // Internet class of question
-	iUdp.write((uint8_t*)&twoByteBuffer, sizeof(twoByteBuffer));
 	// Success!  Everything buffered okay
 	return 1;
 }
@@ -243,9 +295,13 @@ uint16_t DNSClient::ProcessResponse(uint16_t aTimeout, IPAddress& aAddress)
 	}
 	iUdp.read(header.byte, DNS_HEADER_SIZE);
 
+  //Austin
+	iRequestId = DNS_MSGID;	//Temporal code
 	uint16_t header_flags = htons(header.word[1]);
+	uint16_t header_word = htons(header.word[0]);
 	// Check that it's a response to this request
-	if ((iRequestId != (header.word[0])) ||
+	//if ((iRequestId != (header.word[0])) ||
+	if ((iRequestId != (header_word)) ||  //Austin :)
 	  ((header_flags & QUERY_RESPONSE_MASK) != (uint16_t)RESPONSE_FLAG) ) {
 		// Mark the entire packet as read
 		iUdp.flush(); // FIXME

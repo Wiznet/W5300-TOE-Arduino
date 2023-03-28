@@ -153,7 +153,7 @@ void DhcpClass::send_DHCP_MESSAGE(uint8_t messageType, uint16_t secondsElapsed)
 
 	//put data in W5100 transmit buffer
 	_dhcpUdpSocket.write(buffer, 28);
-	W5300.udp_send_packet_len += 28;  //W5300
+	//W5300.udp_send_packet_len += 28;  //W5300, Austin
 
 	memset(buffer, 0, 32); // clear local buffer
 
@@ -161,15 +161,16 @@ void DhcpClass::send_DHCP_MESSAGE(uint8_t messageType, uint16_t secondsElapsed)
 
 	//put data in W5100 transmit buffer
 	_dhcpUdpSocket.write(buffer, 16);
-	W5300.udp_send_packet_len += 16;  //W5300
+	//W5300.udp_send_packet_len += 16;  //W5300
 
 	memset(buffer, 0, 32); // clear local buffer
 
 	// leave zeroed out for sname && file
 	// put in W5100 transmit buffer x 6 (192 bytes)
+
 	for(int i = 0; i < 6; i++) {
 		_dhcpUdpSocket.write(buffer, 32);
-		W5300.udp_send_packet_len += 32;
+		//W5300.udp_send_packet_len += 32;
 	}
 
 	// OPT - Magic Cookie
@@ -200,7 +201,7 @@ void DhcpClass::send_DHCP_MESSAGE(uint8_t messageType, uint16_t secondsElapsed)
 
 	//put data in W5100 transmit buffer
 	_dhcpUdpSocket.write(buffer, 30);
-	W5300.udp_send_packet_len += 30;  //W5300
+	//W5300.udp_send_packet_len += 30;  //W5300
 
 	if (messageType == DHCP_REQUEST) {
 		buffer[0] = dhcpRequestedIPaddr;
@@ -219,7 +220,7 @@ void DhcpClass::send_DHCP_MESSAGE(uint8_t messageType, uint16_t secondsElapsed)
 
 		//put data in W5100 transmit buffer
 		_dhcpUdpSocket.write(buffer, 12);
-		W5300.udp_send_packet_len += 12;  //W5300
+		//W5300.udp_send_packet_len += 12;  //W5300
 	}
 
 	buffer[0] = dhcpParamRequest;
@@ -234,9 +235,10 @@ void DhcpClass::send_DHCP_MESSAGE(uint8_t messageType, uint16_t secondsElapsed)
 
 	//put data in W5100 transmit buffer
 	_dhcpUdpSocket.write(buffer, 9);
-	W5300.udp_send_packet_len += 9;  //W5300
+	//W5300.udp_send_packet_len += 9;  //W5300
 	_dhcpUdpSocket.endPacket();
-	W5300.udp_send_packet_len = 0;  //W5300
+	//W5300.udp_send_packet_len = 0;  //W5300
+
 }
 
 uint8_t DhcpClass::parseDHCPResponse(unsigned long responseTimeout, uint32_t& transactionId)

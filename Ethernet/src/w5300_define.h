@@ -172,7 +172,7 @@ extern "C" {
 #define Sn_MR_TCP          0x01
 #define Sn_MR_UDP          0x02                 /**< Protocol bits of \ref Sn_MR. */
 #define Sn_MR_IPRAW        0x03                 /**< Protocol bits of \ref Sn_MR. */
-#define Sn_MR_MACRAW       0x04 1
+#define Sn_MR_MACRAW       0x04
 #define Sn_MR_PPPoE        0x05                 /**< Protocol bits of \ref Sn_MR. */
 
 #define SOCK_STREAM        Sn_MR_TCP            /**< For Berkeley Socket API, Refer to @ref Sn_MR_TCP */

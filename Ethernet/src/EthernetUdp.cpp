@@ -90,7 +90,7 @@ size_t EthernetUDP::write(uint8_t byte)
 
 size_t EthernetUDP::write(const uint8_t *buffer, size_t size)
 {
-	//Serial.printf("UDP write %d\n", size);
+	W5300.udp_send_packet_len += size;	//Austin :)
 	uint16_t bytes_written = Ethernet.socketBufferData(sockindex, _offset, buffer, size);
 	_offset += bytes_written;
 	return bytes_written;
@@ -98,6 +98,7 @@ size_t EthernetUDP::write(const uint8_t *buffer, size_t size)
 
 int EthernetUDP::parsePacket()
 {
+	uint16_t rsr = 0;
 	// discard any remaining bytes in the last packet
 	while (_remaining) {
 		// could this fail (loop endlessly) if _remaining > 0 and recv in read fails?
@@ -105,8 +106,8 @@ int EthernetUDP::parsePacket()
 		// hope the w5100 always behaves :)
 		read((uint8_t *)NULL, _remaining);
 	}
-
-	if (Ethernet.socketRecvAvailable(sockindex) > 0) {
+	rsr = Ethernet.socketRecvAvailable(sockindex);
+	if (rsr > 0) {
 		//HACK - hand-parse the UDP packet using TCP recv method
 		uint8_t tmpBuf[8];
 		int ret=0;
@@ -156,7 +157,6 @@ int EthernetUDP::read(unsigned char *buffer, size_t len)
 		}
 		if (got > 0) {
 			_remaining -= got;
-			//Serial.printf("UDP read %d\n", got);
 			return got;
 		}
 	}
