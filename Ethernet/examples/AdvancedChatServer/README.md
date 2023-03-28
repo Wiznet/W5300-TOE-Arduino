@@ -73,8 +73,8 @@ and And set the maximum number of connected clients.
 4. When a new client connects, the program sends a welcome message and stores the client's connection in an array.
 
 5. When a client sends a message, the program broadcasts the message to all connected clients, except the one that sent the message.
-<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/advancedChatServer_1"></p>
-<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/advancedChatServer_2"></p>
+<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/advancedChatServer_1.jpg"></p>
+<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/examples/advancedChatServer_2.jpg"></p>
 
 
 
