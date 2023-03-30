@@ -4,7 +4,7 @@ These sections will guide you through a series of steps from configuring develop
 
 - [**Hardware Requirements**](#hardware_requirements)
 - [**Development Environment Configuration**](#development_environment_configuration)
-    - [**Setup ST-LINK**](#setup_st-link)
+   - [**Setup ST-LINK**](#setup_st-link)
 - [**Example Structure**](#example_structure)
 - [**Example Testing**](#example_testing)
 
@@ -13,21 +13,12 @@ These sections will guide you through a series of steps from configuring develop
 <a name="hardware_requirements"></a>
 ## Hardware Requirements
 
-- [**W5300 TOE Shield**][link-w5300_toe_shield]
-- **One of the STM32 Nucleo-144 Boards**
-    - [**NUCLEO-F429ZI**][link-nucleo-f429zi]
+- **W5300 TOE Shield**
+- **NUCLEO-F429ZI**
 - **Desktop or Laptop**
 - **USB Type-B Micro 5 Pin Cable**
-
--------
-
-<a name="hardware_requirements"></a>
-
-# Hardware requirements
-
- The ethernet examples use **NUCLEO-F429ZI** build on STM32 MCU with WIZnet's [**W5300**][link-w5300] ethernet chip.
-If you use other STM board, supported board of STMicroelectronics micropython in [**LIST**][link-suppoted_stm]
-and check that the board supports FMC 16bit data
+-
+* Currently, W5300 TOE examples only support NUCLEO-F429ZI.
 
 ## Pin Diagram
 
@@ -86,19 +77,48 @@ Therefore, in order to use the ST-LINK of the STM32 Nucleo-144 board, minor sett
 <a name="example_structure"></a>
 ## Example Structure
 
-- [**Linkstatus**][link-Linkstatus]
-- [**ChatServer**][link-ChatServer]
 - [**AdvancedChatServer**][link-AdvancedChatServer]
+- [**DNS**][link-DNS]
+- [**DhcpAddressPrinter**][link-DhcpAddressPrinter]
+- [**NTPClient**][link-NTPClient]
+- [**UDP_Loopback**][link-UDP_Loopback]
 - [**WebServer**][link-WebServer]
-- [**BarometricPressureWebServer**][link-BarometricPressureWebServer]
-- [**PlatformIO_CPP_Examples**][link-PlatformIO_CPP_Examples]
 
 
 <a name="example_testing"></a>
-## Example Testing
+##  How to use W5300 TOE shield in Arduino IDE
+This article is a guide on how to use the W5300 TOE Shield with the Arduino IDE, specifically with the STM32 Nucleo-F429ZI board. In this article, we will provide a step-by-step tutorial on how to configure the Arduino IDE
 
-Please refer to 'README.md' in each example directory to detail guide for testing examples.
+### Step1. Add additonal boards manager URLs
+ To access the "Additional Boards Manager URLs" in the Arduino IDE, [File] -> [Preferences].
+you can find the option to add a new URL by copying and pasting the [Additional Board Manager URLs]
+>https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json
 
+<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/getting_started/stm_arduino_json.png"></p>
+
+
+### Step2. Add libraryes
+ To copy the **Ethernet** and **FMC** folders from the repository, paste them into the [Arduino15] directory on your computer.
+ *The location depending on the PC environment
+>C:\Users_YOUR_NAME_\AppData\Local\Arduino15\libraries
+
+<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/getting_started/copy_to_lib.png"></p>
+
+###Step3. Install the Library and Change Board to Nucleo-144
+Install the **STM32core** library through the board manager
+[Tools] -> [Board] -> [Board Manager...] -> serching [STM32] -> install [STM32 Cores]
+
+<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/getting_started/arduino_stm32core_setting.png"></p>
+
+Then change the board to Necleo-144.
+[Tools] -> [Board] -> [STM32 Boards] => [Necleo-144]
+
+<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/getting_started/arduino_necleo_setting.png"></p>
+
+###step4. Make an Arduino sketch
+Once you have completed the above steps, you can find examples for the Nucleo-144 in the Examples section of the Arduino IDE. To confirm that Ethernet is functioning.
+
+<p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/getting_started/arduino_select_example.png"></p>
 
 
 <!--
@@ -108,11 +128,11 @@ Link
 [link-w5300_toe_shield]: fill_in_the_blank
 [link-nucleo-f429zi]: https://www.st.com/en/evaluation-tools/nucleo-f429zi.html
 
-[link-Linkstatus]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/LinkStatus
-[link-ChatServer]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/ChatServer
 [link-AdvancedChatServer]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/AdvancedChatServer
+[link-DNS]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/DNS
+[link-DhcpAddressPrinter]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/DhcpAddressPrinter
+[link-NTPClient]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/NTPClient
+[link-UDP_Loopback]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/UDP_Loopback
 [link-WebServer]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/WebServer
-[link-BarometricPressureWebServer]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/BarometricPressureWebServer
-[link-PlatformIO_CPP_Examples]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/PlatformIO_CPP_Examples
 
 [link-stm_pinmap]:https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/static/images/stm_pimmap.png

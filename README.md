@@ -26,8 +26,6 @@ STM32 Nucleo-144 boards support the list below.
 And W5300 TOE Examples supports two IDEs.
 
 **※ Please select and use the IDE according to the environment you are using.**
-
-
 <table>
   <tr>
     <td align=center>Board</td>
@@ -39,37 +37,7 @@ And W5300 TOE Examples supports two IDEs.
     <td align=center><a href="https://github.com/Wiznet/W5300-TOE-ARDUINO/tree/main/Ethernet/examples"><b>ARDUINO W5300</b></td>
     <td>INO-based example implemented using <a href="https://www.arduino.cc/en/software">ARDUINO IDE.</td>
   </tr>
-  <tr>
-    <td align=center><a href="https://github.com/Wiznet/W5300-TOE-ARDUINO/tree/main/Ethernet/examples/PlatformIO_CPP_Examples"><b>Platform IO W5300</b>
-    </td>
-    <td>CPP-based example implemented using <a href="https://platformio.org">PlatformIO.  
-    </td>
-  </tr>
 </table>
-
-<br></br>
-- **ARDUINO for STM32 Project**
-
-1. Reference: https://github.com/stm32duino/Arduino_Core_STM32/blob/main/README.md
-This repo is available as a package usable with **Arduino Boards Manager**.
-
-2. **Add this link** in the "**Additional Boards Managers URLs**" field:
-https://github.com/stm32duino/BoardManagerFiles/raw/main/package_stmicroelectronics_index.json
-![][link-stm-json-path]
-
-3. Replace existing Ethernet and FMC library with this W5300 library.
-  path: C:\Users\_YOUR_NAME_\AppData\Local\Arduino15\libraries
-  
-  ![][link-ethernet-path]
-
-<br></br>
-- **PlatformIO for STM32 Project**
-
-1. Make PlatformIO Project for  STM32F4 Series (for example: select **NUCLEO-F429ZI** board).
-
-2. Follow the README in the PlatformIO's directory and folder.
-
-3. This library have to locate in lib  path.
 
 <a name="directory_structure"></a>
 ## Directory Structure
@@ -79,21 +47,17 @@ W5300-TOE-ARDUINO
   ┃
   ┣ Etherent
   ┃   ┣ example
-  ┃   ┃   ┣ LinkStatus
-  ┃   ┃   ┣ ChatServer
-  ┃   ┃   ┣ DhcpAddressPrinter
-  ┃   ┃   ┣ UDPSendReceiveString
   ┃   ┃   ┣ AdvancedChatServer
-  ┃   ┃   ┣ WebServer
-  ┃   ┃   ┣ BarometricPressureWebServer
-  ┃   ┃   ┗ PlatformIO_CPP_Examples (CPP Example files for PlatformIO)
-  ┃   ┃
+  ┃   ┃   ┣ DNS
+  ┃   ┃   ┣ DhcpAddressPrinter
+  ┃   ┃   ┣ NTPClient
+  ┃   ┃   ┣ UDP_Loopback
+  ┃   ┃   ┗ WebServer
   ┃   ┗ src (W5300 ioLibrary for ARDUINO)
   ┗ FMC
   ┃   ┗ (STM32F's FMC Register Settup files)
   ┗ Static
-       ┣ documents
-       ┗ images
+
 ```
 
 
@@ -139,5 +103,3 @@ Link
 [link-datasheet_w5300_toe_shield]: fill_in_the_blank
 [link-w5300-toe-C]: https://github.com/Wiznet/W5300-TOE-C
 [link-w5300-toe-micropython]: https://github.com/Wiznet/W5300-TOE-MicroPython
-[link-ethernet-path]: https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/iamges/arduino_ethernet_path.jpg
-[link-stm-json-path]: https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/iamges/getting_started/stm_arduino_json.png
