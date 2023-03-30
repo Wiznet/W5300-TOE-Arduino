@@ -15,16 +15,16 @@ These sections will guide you through a series of steps from configuring develop
 
 - **W5300 TOE Shield**
 - **NUCLEO-F429ZI**
+   Currently, W5300 TOE examples only support NUCLEO-F429ZI.
 - **Desktop or Laptop**
 - **USB Type-B Micro 5 Pin Cable**
--
-* Currently, W5300 TOE examples only support NUCLEO-F429ZI.
+
+ 
 
 ## Pin Diagram
 
 **`STM32F429ZI`**
 This document is based on STM32F429ZI. If you use other STM board, Please edit it to your HW configuration.
-![][link-stm_pinmap]
  - FMC Data pin (0-8 or 0-16)
  - FMC Address pin (0-10)
  - FMC Control GPIO pin (NE, NWE, NOE)
@@ -34,13 +34,8 @@ This document is based on STM32F429ZI. If you use other STM board, Please edit i
 
 ------
 
-**※ Currently, W5300 TOE examples only support NUCLEO-F429ZI, so please refer to this.**
-
-
-
 <a name="development_environment_configuration"></a>
 ## Development Environment Configuration
-
 
 
 <a name="setup_st-link"></a>
@@ -99,23 +94,27 @@ you can find the option to add a new URL by copying and pasting the [Additional 
 
 ### Step2. Add libraryes
  To copy the **Ethernet** and **FMC** folders from the repository, paste them into the [Arduino15] directory on your computer.
+
  *The location depending on the PC environment
 >C:\Users_YOUR_NAME_\AppData\Local\Arduino15\libraries
 
 <p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/getting_started/copy_to_lib.png"></p>
 
-###Step3. Install the Library and Change Board to Nucleo-144
+### Step3. Install the Library and Change Board to Nucleo-144
 Install the **STM32core** library through the board manager
-[Tools] -> [Board] -> [Board Manager...] -> serching [STM32] -> install [STM32 Cores]
+
+**[Tools] -> [Board] -> [Board Manager...] -> serching [STM32] -> install [STM32 Cores]**
 
 <p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/getting_started/arduino_stm32core_setting.png"></p>
 
 Then change the board to Necleo-144.
-[Tools] -> [Board] -> [STM32 Boards] => [Necleo-144]
+
+***[Tools] -> [Board] -> [STM32 Boards] => [Necleo-144]***
 
 <p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/getting_started/arduino_necleo_setting.png"></p>
 
-###step4. Make an Arduino sketch
+### step4. Make an Arduino sketch
+
 Once you have completed the above steps, you can find examples for the Nucleo-144 in the Examples section of the Arduino IDE. To confirm that Ethernet is functioning.
 
 <p align="center"><img src="https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/Static/images/getting_started/arduino_select_example.png"></p>
@@ -134,5 +133,3 @@ Link
 [link-NTPClient]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/NTPClient
 [link-UDP_Loopback]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/UDP_Loopback
 [link-WebServer]: https://github.com/Wiznet/W5300-TOE-Arduino/tree/main/Ethernet/examples/WebServer
-
-[link-stm_pinmap]:https://github.com/Wiznet/W5300-TOE-Arduino/blob/main/static/images/stm_pimmap.png
